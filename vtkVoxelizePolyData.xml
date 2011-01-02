@@ -1,0 +1,51 @@
+<ServerManagerConfiguration>
+  <ProxyGroup name="filters">
+    <!-- ================================================================== -->
+    <SourceProxy name="VoxelizePolyData" class="vtkVoxelizePolyData" label="VoxelizePolyData">
+      <Documentation
+         long_help="Voxelize a vtkPolyData."
+         short_help="Voxelize a vtkPolyData.">
+      </Documentation>
+
+      <InputProperty
+         name="Input"
+         command="AddInputConnection"
+         clean_command="RemoveAllInputs">
+        <ProxyGroupDomain name="groups">
+          <Group name="sources"/>
+          <Group name="filters"/>
+        </ProxyGroupDomain>
+        <DataTypeDomain name="input_type">
+          <DataType value="vtkPolyData"/>
+        </DataTypeDomain>
+        <Documentation>
+          Set the input point set.
+        </Documentation>
+      </InputProperty>
+
+         <IntVectorProperty
+                            name="NumberOfCellsX"
+                              command="SetNumberOfCellsX"
+                              number_of_elements="1"
+                              default_values="10">
+         </IntVectorProperty>
+
+
+         <IntVectorProperty
+                            name="NumberOfCellsY"
+                              command="SetNumberOfCellsY"
+                              number_of_elements="1"
+                              default_values="10">
+         </IntVectorProperty>
+
+         <IntVectorProperty
+                            name="NumberOfCellsZ"
+                              command="SetNumberOfCellsZ"
+                              number_of_elements="1"
+                              default_values="10">
+         </IntVectorProperty>
+    </SourceProxy>
+    <!-- End VoxelizePolyData -->
+  </ProxyGroup>
+  <!-- End Filters Group -->
+</ServerManagerConfiguration>
