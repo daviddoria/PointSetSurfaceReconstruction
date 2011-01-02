@@ -41,18 +41,16 @@ int vtkVoxelizePolyData::RequestData(
   vtkInformationVector **inputVector,
   vtkInformationVector *outputVector)
 {
-  // get the input and ouptut
+  // Get the input and ouptut
   vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
   vtkPolyData *input = vtkPolyData::SafeDownCast(
-      inInfo->Get(vtkDataObject::DATA_OBJECT()));
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
 
   vtkInformation *outInfo = outputVector->GetInformationObject(0);
   vtkImageData *output = vtkImageData::SafeDownCast(
-		  outInfo->Get(vtkDataObject::DATA_OBJECT()));
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
 
-  //cout << "input polydata: " << *input << endl;
-
-  //get the bounds of the input PolyData
+  // Get the bounds of the input PolyData
   double bounds[6];
   input->GetBounds(bounds);
   //xmin, xmax, ymin, ymax, zmin, zmax
@@ -63,9 +61,9 @@ int vtkVoxelizePolyData::RequestData(
   double zmin = bounds[4];
   double zmax = bounds[5];
 
-  //create a grid the size of the point set
+  // Create a grid the size of the point set
   vtkSmartPointer<vtkImageData> grid =
-      vtkSmartPointer<vtkImageData>::New();
+    vtkSmartPointer<vtkImageData>::New();
 
   /*
   //exactly the right size
@@ -83,23 +81,23 @@ int vtkVoxelizePolyData::RequestData(
   */
 
 
-  //Compute the size of a cell
+  // Compute the size of a cell
   double CellSizeX = (xmax-xmin)/static_cast<double>(this->NumberOfCellsX);
   double CellSizeY = (ymax-ymin)/static_cast<double>(this->NumberOfCellsY);
   double CellSizeZ = (zmax-zmin)/static_cast<double>(this->NumberOfCellsZ);
 
-  //set the bottom left corner of the grid to the bottom left corner of the data bounding box +
-  //a factor dependent on the border
+  // Set the bottom left corner of the grid to the bottom left corner of the data bounding box +
+  // a factor dependent on the border
   grid->SetOrigin(xmin - static_cast<double>(this->Border) * CellSizeX,
                   ymin - static_cast<double>(this->Border) * CellSizeY,
                   zmin - static_cast<double>(this->Border) * CellSizeZ);
 
-  //make the voxel grid with a uniform border surrounding it
+  // Make the voxel grid with a uniform border surrounding it
   grid->SetExtent(0, this->NumberOfCellsX + 2.0 * static_cast<double>(this->Border),
                   0, this->NumberOfCellsY + 2.0 * static_cast<double>(this->Border),
                   0, this->NumberOfCellsZ + 2.0 * static_cast<double>(this->Border));
 
-  //set the size of each voxel so that the grid spans the entire grid
+  // Set the size of each voxel so that the grid spans the entire grid
   grid->SetSpacing(CellSizeX, CellSizeY, CellSizeZ);
   grid->Update();
 

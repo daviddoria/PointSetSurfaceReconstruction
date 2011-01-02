@@ -16,12 +16,10 @@ int main (int argc, char *argv[])
   voxelize->SetInputConnection(sphereSource->GetOutputPort());
   voxelize->Update();
 
-  vtkImageData* voxelized = voxelize->GetOutput();
-
   vtkSmartPointer<vtkXMLImageDataWriter> writer =
     vtkSmartPointer<vtkXMLImageDataWriter>::New();
   writer->SetFileName("Output.vti");
-  writer->SetInput(voxelized);
+  writer->SetInputConnection(voxelize->GetOutputPort());
   writer->Write();
 
   return EXIT_SUCCESS;

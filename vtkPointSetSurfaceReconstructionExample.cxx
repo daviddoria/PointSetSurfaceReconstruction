@@ -7,39 +7,37 @@
 
 int main (int argc, char *argv[])
 {
-  //verify command line arguments
+  // Verify command line arguments
   if(argc != 3)
     {
-    cout << "Required arguments: InputFilename.vtp OutputFilename.vti" << endl;
+    std::cout << "Required arguments: InputFilename.vtp OutputFilename.vtp" << std::endl;
     return EXIT_FAILURE;
     }
-  
-  //parse command line arguments
-  vtkstd::string inputFilename = argv[1];
-  vtkstd::string outputFilename = argv[2];
-  
-  //read input file
-  vtkSmartPointer<vtkXMLPolyDataReader> reader = 
-      vtkSmartPointer<vtkXMLPolyDataReader>::New();
+
+  // Parse command line arguments
+  std::string inputFilename = argv[1];
+  std::string outputFilename = argv[2];
+
+  // Read input file
+  vtkSmartPointer<vtkXMLPolyDataReader> reader =
+    vtkSmartPointer<vtkXMLPolyDataReader>::New();
   reader->SetFileName(inputFilename.c_str());
   reader->Update();
-  
-  //perform surface reconstruction
-  vtkSmartPointer<vtkPointSetSurfaceReconstruction> surfaceReconstructionFilter = 
-      vtkSmartPointer<vtkPointSetSurfaceReconstruction>::New();
+
+  // Perform surface reconstruction
+  vtkSmartPointer<vtkPointSetSurfaceReconstruction> surfaceReconstructionFilter =
+    vtkSmartPointer<vtkPointSetSurfaceReconstruction>::New();
   surfaceReconstructionFilter->SetInput(reader->GetOutput());
   //surfaceReconstructionFilter->SetSamplesPerDimension(100);
   //surfaceReconstructionFilter->SetBorder(5);
   surfaceReconstructionFilter->Update();
-  
-  vtkPolyData* surface = surfaceReconstructionFilter->GetOutput();
-  
-  //write the surface to a file
-  vtkSmartPointer<vtkXMLPolyDataWriter> writer = 
-      vtkSmartPointer<vtkXMLPolyDataWriter>::New();
+
+  // Write the surface to a file
+  vtkSmartPointer<vtkXMLPolyDataWriter> writer =
+    vtkSmartPointer<vtkXMLPolyDataWriter>::New();
   writer->SetFileName(outputFilename.c_str());
-  writer->SetInput(surface);
+  writer->SetInputConnection(surfaceReconstructionFilter->GetOutputPort());
   writer->Write();
-    
+
   return EXIT_SUCCESS;
 }

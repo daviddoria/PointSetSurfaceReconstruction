@@ -16,3 +16,8 @@ ADD_EXECUTABLE(vtkVoxelizePolyDataExample vtkVoxelizePolyDataExample.cxx
 vtkVoxelizePolyData.cxx)
 TARGET_LINK_LIBRARIES(vtkVoxelizePolyDataExample vtkHybrid )
 
+ADD_EXECUTABLE(vtkPointSetSurfaceReconstructionExample vtkPointSetSurfaceReconstructionExample.cxx
+vtkPointSetSurfaceReconstruction.cxx
+vtkVoxelizePolyData.cxx)
+TARGET_LINK_LIBRARIES(vtkPointSetSurfaceReconstructionExample vtkHybrid )
+

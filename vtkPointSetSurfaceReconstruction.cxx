@@ -35,18 +35,15 @@ int vtkPointSetSurfaceReconstruction::RequestData(vtkInformation *vtkNotUsed(req
                                              vtkInformationVector **inputVector,
                                              vtkInformationVector *outputVector)
 {
-  //This function calls the scanners input and output to allow it to
-  //work in the vtk algorithm pipeline
-
   // Get the info objects
   vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
   vtkInformation *outInfo = outputVector->GetInformationObject(0);
 
   // Get the input and ouptut
   vtkPolyData *input = vtkPolyData::SafeDownCast(
-      inInfo->Get(vtkDataObject::DATA_OBJECT()));
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
   vtkPolyData *output = vtkPolyData::SafeDownCast(
-      outInfo->Get(vtkDataObject::DATA_OBJECT()));
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
 
   // Create a KDTree of the input points
   vtkSmartPointer<vtkKdTreePointLocator> pointTree =
@@ -93,47 +90,43 @@ int vtkPointSetSurfaceReconstruction::RequestData(vtkInformation *vtkNotUsed(req
       {
       for (int x = 0; x < dims[0] - 1; x++)
         {
-        //get cell center
+        // Get cell center
         double center[3];
         GetCellCenter(grid, x, y, z, center);
 
-        //find closest point to this cell
+        // Find closest point to this cell
         vtkIdType ID = pointTree->FindClosestPoint(center);
         double closestPoint[3];
         input->GetPoint(ID, closestPoint);
-        //compute the distance from the cell center to the plane defined by the normal of the closest point
-        //get the normal of the closest point
+        // Compute the distance from the cell center to the plane defined by the normal of the closest point.
+
+        // Get the normal of the closest point
         double n[3];
         normals->GetTuple(ID, n);
 
         // Find the distance from the cell center to the plane defined by this point and normal
         //double distance = vtkPlane::DistanceToPlane(center, n, closestPoint);
-        //vtkstd::cout << "distance: " << distance << vtkstd::endl;
+        //std::cout << "distance: " << distance << std::endl;
         double signedDistance = SignedDistanceToPlane(center, n, closestPoint);
-        //vtkstd::cout << "Signed distance: " << signedDistance << vtkstd::endl;
+        //std::cout << "Signed distance: " << signedDistance << std::endl;
+        double* pixel = static_cast<double*>(grid->GetScalarPointer(x,y,z));
+        pixel[0] = signedDistance;
 
-        grid->SetScalarComponentFromDouble(x,y,z,0,signedDistance);
         }
       }
     }
 
-  /*
-  {
   vtkSmartPointer<vtkXMLImageDataWriter> writer =
       vtkSmartPointer<vtkXMLImageDataWriter>::New();
   writer->SetFileName("grid_values.vti");
   writer->SetInput(grid);
   writer->Write();
-  }
-  */
 
   vtkSmartPointer<vtkContourFilter> contourFilter =
     vtkSmartPointer<vtkContourFilter>::New();
   contourFilter->SetValue(0, 0);
   contourFilter->SetInput(grid);
   contourFilter->Update();
-
-  vtkPolyData* surface = contourFilter->GetOutput();
 
   output->ShallowCopy(contourFilter->GetOutput());
 
