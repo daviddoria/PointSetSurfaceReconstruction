@@ -14,10 +14,10 @@ endif(BUILD_PARAVIEW_PLUGIN)
 
 ADD_EXECUTABLE(vtkVoxelizePolyDataExample vtkVoxelizePolyDataExample.cxx
 vtkVoxelizePolyData.cxx)
-TARGET_LINK_LIBRARIES(vtkVoxelizePolyDataExample vtkHybrid )
+TARGET_LINK_LIBRARIES(vtkVoxelizePolyDataExample ${VTK_LIBRARIES})
 
 ADD_EXECUTABLE(vtkPointSetSurfaceReconstructionExample vtkPointSetSurfaceReconstructionExample.cxx
 vtkPointSetSurfaceReconstruction.cxx
 vtkVoxelizePolyData.cxx)
-TARGET_LINK_LIBRARIES(vtkPointSetSurfaceReconstructionExample vtkHybrid )
+TARGET_LINK_LIBRARIES(vtkPointSetSurfaceReconstructionExample ${VTK_LIBRARIES})
 

@@ -27,7 +27,7 @@ int main (int argc, char *argv[])
   // Perform surface reconstruction
   vtkSmartPointer<vtkPointSetSurfaceReconstruction> surfaceReconstructionFilter =
     vtkSmartPointer<vtkPointSetSurfaceReconstruction>::New();
-  surfaceReconstructionFilter->SetInput(reader->GetOutput());
+  surfaceReconstructionFilter->SetInputData(reader->GetOutput());
   //surfaceReconstructionFilter->SetSamplesPerDimension(100);
   //surfaceReconstructionFilter->SetBorder(5);
   surfaceReconstructionFilter->Update();

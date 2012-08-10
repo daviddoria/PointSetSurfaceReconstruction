@@ -63,7 +63,7 @@ int vtkPointSetSurfaceReconstruction::RequestData(vtkInformation *vtkNotUsed(req
 
   vtkSmartPointer<vtkVoxelizePolyData> voxelizeFilter =
     vtkSmartPointer<vtkVoxelizePolyData>::New();
-  voxelizeFilter->SetInput(input);
+  voxelizeFilter->SetInputData(input);
   voxelizeFilter->SetNumberOfCellsAll(this->SamplesPerDimension);
   voxelizeFilter->SetBorder(this->Border);
   voxelizeFilter->Update();
@@ -80,7 +80,7 @@ int vtkPointSetSurfaceReconstruction::RequestData(vtkInformation *vtkNotUsed(req
   }
 */
 
-  grid->SetNumberOfScalarComponents(1);
+  grid->AllocateScalars(grid->GetScalarType(), 1);
 
   int* dims = grid->GetDimensions();
 
@@ -119,13 +119,13 @@ int vtkPointSetSurfaceReconstruction::RequestData(vtkInformation *vtkNotUsed(req
   vtkSmartPointer<vtkXMLImageDataWriter> writer =
       vtkSmartPointer<vtkXMLImageDataWriter>::New();
   writer->SetFileName("grid_values.vti");
-  writer->SetInput(grid);
+  writer->SetInputData(grid);
   writer->Write();
 
   vtkSmartPointer<vtkContourFilter> contourFilter =
     vtkSmartPointer<vtkContourFilter>::New();
   contourFilter->SetValue(0, 0);
-  contourFilter->SetInput(grid);
+  contourFilter->SetInputData(grid);
   contourFilter->Update();
 
   output->ShallowCopy(contourFilter->GetOutput());

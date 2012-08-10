@@ -99,12 +99,9 @@ int vtkVoxelizePolyData::RequestData(
 
   // Set the size of each voxel so that the grid spans the entire grid
   grid->SetSpacing(CellSizeX, CellSizeY, CellSizeZ);
-  grid->Update();
 
   output->ShallowCopy(grid);
   output->SetExtent(grid->GetExtent());
-  output->SetUpdateExtent(grid->GetUpdateExtent());
-  output->SetWholeExtent(grid->GetWholeExtent());
 
   return 1;
 }
